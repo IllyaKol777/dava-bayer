@@ -101,22 +101,18 @@ def delete_product(id):
     conn.close()
     return redirect(url_for('index'))
 
-
 def run_flask():
     if not os.path.exists('static/uploads'):
         os.makedirs('static/uploads')
     app.run(host='0.0.0.0', port=5000)
 
-
-def run_bot():
-    asyncio.sleep(10)
+def run_bot_thread():
     asyncio.run(bot_main())
-
 
 if __name__ == '__main__':
     flask_thread = threading.Thread(target=run_flask)
+    bot_thread = threading.Thread(target=run_bot_thread)
     flask_thread.start()
-
-    
-    
-    run_bot()
+    bot_thread.start()
+    flask_thread.join()
+    bot_thread.join()
